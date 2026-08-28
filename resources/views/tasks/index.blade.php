@@ -2,7 +2,7 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-center justify-between">
             <flux:heading size="xl">{{ __('All Tasks') }}</flux:heading>
-            @can('create-task')
+            @can('create', \App\Models\Task::class)
                 <flux:button href="{{ route('tasks.create') }}" variant="primary" wire:navigate>
                     {{ __('Add new task') }}
                 </flux:button>
@@ -62,12 +62,12 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="flex items-center gap-3">
-                                    @can('update-task', $task)
+                                    @can('update', $task)
                                         <flux:button href="{{ route('tasks.edit', $task) }}" size="sm" wire:navigate>
                                             {{ __('Edit') }}
                                         </flux:button>
                                     @endcan
-                                    @can('delete-task', $task)
+                                    @can('delete', $task)
                                         <form action="{{ route('tasks.destroy', $task) }}" method="POST"
                                             onsubmit="return confirm('Are you sure?')">
                                             @method('DELETE')
