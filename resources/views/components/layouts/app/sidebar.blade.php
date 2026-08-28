@@ -19,15 +19,11 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group heading="Platform" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>Dashboard</flux:navlist.item>
-                    @if (auth()->user()->is_admin)
-                        <flux:sidebar.item :href="route('admin.tasks.index')" :current="request()->routeIs('admin.tasks.index')" wire:navigate>
-                            {{ __('All Tasks') }}
-                        </flux:sidebar.item>
-                    @else
-                        <flux:sidebar.item :href="route('user.tasks.index')" :current="request()->routeIs('user.tasks.index')" wire:navigate>
+
+                        <flux:sidebar.item :href="route('tasks.index')" :current="request()->routeIs('tasks.*')" wire:navigate>
                             {{ __('Tasks') }}
                         </flux:sidebar.item>
-                    @endif
+
                 </flux:navlist.group>
             </flux:navlist>
 

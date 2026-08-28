@@ -1,11 +1,8 @@
 <?php
 
-use App\Http\Middleware\IsAdminMiddleware;
-use App\Http\Middleware\IsUserMiddleware;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Http\Controllers\Admin;
-use App\Http\Controllers\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,19 +23,8 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
-    Route::prefix('admin')
-        ->name('admin.')
-        ->middleware(IsAdminMiddleware::class)
-        ->group(function () {
-            Route::resource('tasks', Admin\TaskController::class);
-        });
+    Route::resource('tasks', TaskController::class);
 
-    Route::prefix('user')
-        ->name('user.')
-        // ->middleware(IsUserMiddleware::class)
-        ->group(function () {
-            Route::resource('tasks', User\TaskController::class);
-        });
 });
 
 require __DIR__.'/auth.php';
