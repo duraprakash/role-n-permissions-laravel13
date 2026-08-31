@@ -100,7 +100,7 @@ it('does not allow a user to view another users task', function () {
 
     $this->actingAs($user)
         ->get(route('tasks.show', $otherUserTask))
-        ->assertForbidden();
+        ->assertNotFound();
 });
 
 it('allows an administrator to view any task', function () {
@@ -179,7 +179,7 @@ it('does not allow a user to access the update page for another users task', fun
 
     $this->actingAs($user)
         ->get(route('tasks.edit', $otherUserTask))
-        ->assertForbidden();
+        ->assertNotFound();
 });
 
 it('allows a user to udpate their own task', function () {
@@ -210,7 +210,7 @@ it('does not allow a user to update another users task', function () {
         ->put(route('tasks.update', $otherUserTask), [
             'name' => 'Updated task name',
         ])
-        ->assertForbidden();
+        ->assertNotFound();
 
     expect($otherUserTask->refresh()->name)
         ->not()->toBe('Updated task name');
@@ -283,7 +283,7 @@ it('does not allow a user to delete another users task', function () {
 
     $this->actingAs($user)
         ->delete(route('tasks.destroy', $otherUserTask))
-        ->assertForbidden();
+        ->assertNotFound();
 
     $this->assertDatabaseHas('tasks', [
         'id' => $otherUserTask->id,
