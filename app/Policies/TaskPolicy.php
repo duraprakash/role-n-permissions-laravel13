@@ -13,15 +13,15 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
-     */
+    */
     public function view(User $user, Task $task): bool
     {
-        return false;
+        return $user->is_admin || $task->user_id === $user->id;
     }
 
     /**

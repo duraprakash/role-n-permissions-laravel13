@@ -1,7 +1,11 @@
 <x-layouts.app :title="__('Tasks')">
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-center justify-between">
-            <flux:heading size="xl">{{ __('All Tasks') }}</flux:heading>
+            @if (auth()->user()->is_admin === true)
+                <flux:heading size="xl">{{ __('All Tasks') }}</flux:heading>
+            @else
+                <flux:heading size="xl">{{ __('My Tasks') }}</flux:heading>
+            @endif
             @can('create', \App\Models\Task::class)
                 <flux:button href="{{ route('tasks.create') }}" variant="primary" wire:navigate>
                     {{ __('Add new task') }}
@@ -36,6 +40,12 @@
                         <th
                             class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                         </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-neutral-200 bg-white dark:divide-neutral-700 dark:bg-zinc-900">
@@ -60,22 +70,30 @@
                                     <span>&#10060;</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-1 py-1 text-sm">
+                                <div class="flex items-center gap-3">
+                                    @can('view', $task)
+                                        <flux:button href="{{ route('tasks.show', $task) }}" size="sm" wire:navigate>
+                                            {{ __('View') }}
+                                        </flux:button>
+                                    @endcan
+                                </div>
+                            </td>
+                            <td class="px-1 py-1 text-sm">
                                 <div class="flex items-center gap-3">
                                     @can('update', $task)
                                         <flux:button href="{{ route('tasks.edit', $task) }}" size="sm" wire:navigate>
                                             {{ __('Edit') }}
                                         </flux:button>
                                     @endcan
+                                </div>
+                            </td>
+                            <td class="px-1 py-1 text-sm">
+                                <div class="flex items-center gap-3">
                                     @can('delete', $task)
-                                        <form action="{{ route('tasks.destroy', $task) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure?')">
-                                            @method('DELETE')
-                                            @csrf
-                                            <flux:button type="submit" size="sm" variant="danger">
-                                                {{ __('Delete') }}
-                                            </flux:button>
-                                        </form>
+                                        <flux:button href="{{ route('tasks.delete', $task) }}" size="sm" wire:navigate>
+                                            {{ __('Delete') }}
+                                        </flux:button>
                                     @endcan
                                 </div>
                             </td>

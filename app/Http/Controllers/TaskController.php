@@ -4,27 +4,43 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
-// use Illuminate\Routing\Attributes\Controllers\Authorize; // This is supposed to be used
-use Livewire\Attributes\Authorize; // This is used instead as livewire
+use Illuminate\Support\Facades\Gate;
 use PhpParser\Node\Stmt\TryCatch;
 
 class TaskController extends Controller
 {
     public function index(){
-        $tasks = Task::with('user')->get();
 
+        Gate::authorize('viewAny', Task::class);
+
+        if (auth()->user()->is_admin)
+        {
+            $tasks = Task::with('user')->get();
+        } else {
+            $tasks = Task::with('user')->where('user_id', auth()->id())->get();
+        }
+        
         return view('tasks.index', compact('tasks'));
     }
 
-    #[Authorize('create', [Task::class])]
+    public function show(Task $task){
+
+        Gate::authorize('view', $task);
+
+        return view('tasks.view', compact('task'));
+    }
+
     public function create(){
+
+        Gate::authorize('create', Task::class);
 
         return view('tasks.create');
     }
 
-    #[Authorize('create', [Task::class])]
     public function store(Request $request)
     {
+
+        Gate::authorize('create', Task::class);
 
         Task::create($request->only('name', 'due_date')
             + ['user_id' => auth()->id()]);
@@ -32,25 +48,34 @@ class TaskController extends Controller
         return redirect()->route('tasks.index');
     }
 
-    #[Authorize('update', 'task')]
     public function edit(Task $task)
     {
+        Gate::authorize('update', $task);
 
         return view('tasks.edit', compact('task'));
     }
 
-    #[Authorize('update', 'task')]
     public function update(Request $request, Task $task)
     {
+
+        Gate::authorize('update', $task);
 
         $task->update($request->only('name', 'due_date'));
 
         return redirect()->route('tasks.index');
     }
 
-    #[Authorize('delete', 'task')]
+    public function delete(Task $task)
+    {
+        Gate::authorize('delete', $task);
+
+        return view('tasks.delete', compact('task'));
+    }
+
     public function destroy(Task $task){
 
+        Gate::authorize('delete', $task);
+        
         $task->delete();
 
         return redirect()->route('tasks.index');

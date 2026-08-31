@@ -24,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
     Route::resource('tasks', TaskController::class);
+    Route::get('tasks/{task}/delete', [TaskController::class, 'delete'])->name('tasks.delete');
 
 });
 
