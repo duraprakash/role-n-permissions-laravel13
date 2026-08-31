@@ -13,12 +13,7 @@ class TaskController extends Controller
 
         Gate::authorize('viewAny', Task::class);
 
-        if (auth()->user()->is_admin)
-        {
-            $tasks = Task::with('user')->get();
-        } else {
-            $tasks = Task::with('user')->where('user_id', auth()->id())->get();
-        }
+        $tasks = Task::with('user')->get();
         
         return view('tasks.index', compact('tasks'));
     }
