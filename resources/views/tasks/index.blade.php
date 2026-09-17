@@ -1,11 +1,12 @@
 <x-layouts.app :title="__('Tasks')">
     <div class="flex h-full w-full flex-1 flex-col gap-4">
         <div class="flex items-center justify-between">
-            @if (auth()->user()->is_admin === true)
+            @if (auth()->user()->role_id === \App\Enums\Role::Administrator->value)
                 <flux:heading size="xl">{{ __('All Tasks') }}</flux:heading>
             @else
                 <flux:heading size="xl">{{ __('My Tasks') }}</flux:heading>
             @endif
+
             @can('create', \App\Models\Task::class)
                 <flux:button href="{{ route('tasks.create') }}" variant="primary" wire:navigate>
                     {{ __('Add new task') }}

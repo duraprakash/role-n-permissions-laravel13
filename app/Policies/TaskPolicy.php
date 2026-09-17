@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Role;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,7 +22,7 @@ class TaskPolicy
     */
     public function view(User $user, Task $task): bool
     {
-        return $user->is_admin || $task->user_id === $user->id;
+        return true;
     }
 
     /**
@@ -29,7 +30,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->role_id === Role::Administrator->value;
     }
 
     /**
@@ -37,7 +38,9 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->is_admin || $task->user_id === $user->id;
+        return $user->role_id === Role::Administrator->value
+            || $user->role_id === Role::Manager->value
+            || $task->user_id === $user->id;
     }
 
     /**
@@ -45,7 +48,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->is_admin || $task->user_id === $user->id;
+        return $user->role_id === Role::Administrator->value;
     }
 
     /**

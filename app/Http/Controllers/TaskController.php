@@ -13,7 +13,7 @@ class TaskController extends Controller
 
         Gate::authorize('viewAny', Task::class);
 
-        $tasks = Task::with('user')->get();
+        $tasks = Task::all();
         
         return view('tasks.index', compact('tasks'));
     }
@@ -37,8 +37,16 @@ class TaskController extends Controller
 
         Gate::authorize('create', Task::class);
 
-        Task::create($request->only('name', 'due_date')
-            + ['user_id' => auth()->id()]);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'due_date' => ['required', 'date'],
+        ]);
+
+        Task::create([
+            'name' => $validated['name'],
+            'due_date' => $validated['due_date'],
+            'user_id' => $request->user()->id,
+        ]);
 
         return redirect()->route('tasks.index');
     }
@@ -55,7 +63,12 @@ class TaskController extends Controller
 
         Gate::authorize('update', $task);
 
-        $task->update($request->only('name', 'due_date'));
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'due_date' => ['required', 'date'],
+        ]);
+
+        $task->update($validated);
 
         return redirect()->route('tasks.index');
     }
