@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,27 +15,29 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
-            [
-                'name' => 'User Test',
-                'email' => 'user@gmail.com',
-                'password' => Hash::make('password'),
-                'role_id' => 1,
-            ],
-            [
-                'name' => 'Admin Test',
-                'email' => 'admin@gmail.com',
-                'password' => Hash::make('password'),
-                'role_id' => 2,
-            ],
-            [
-                'name' => 'Prakash Dura',
-                'email' => 'duraprakash141@gmail.com',
-                'password' => Hash::make('password'),
-                'role_id' => 3,
-            ],
-        ];
+        $user = User::create([
+            'name' => 'User Test',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $user->roles()->attach(Role::User->value);
         
-        User::insert($users);
+        $administrator = User::create([
+            'name' => 'Admin Test',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $administrator->roles()->attach(Role::Administrator->value);
+
+        $manager = User::create([
+            'name' => 'Prakash Dura',
+            'email' => 'duraprakash141@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $manager->roles()->attach(Role::Manager->value);
+
     }
 }
