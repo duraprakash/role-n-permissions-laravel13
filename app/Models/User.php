@@ -3,9 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,7 +25,6 @@ class User extends Authenticatable // implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role_id',
     ];
 
     /**
@@ -36,6 +35,10 @@ class User extends Authenticatable // implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $with = [
+        'roles'
     ];
 
     /**
@@ -68,8 +71,8 @@ class User extends Authenticatable // implements MustVerifyEmail
         return $this->hasMany(Task::class);
     }
 
-    public function role(): BelongsTo
+    public function roles(): BelongsToMany
     {
-        return $this->belongsTo(\App\Models\Role::class);
+        return $this->belongsToMany(Role::class);
     }
 }

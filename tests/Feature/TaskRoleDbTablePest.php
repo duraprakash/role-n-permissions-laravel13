@@ -25,7 +25,7 @@ it('does not allow other users to access create task page', function (User $user
         ->get(route('tasks.create'))
         ->assertForbidden();
 })->with([
-            fn() => User::factory()->create(['role_id' => Role::User->value]),
+            fn() => User::factory()->user()->create(),
             fn() => User::factory()->manager()->create(),
         ]);
 
@@ -92,6 +92,6 @@ it('does not allow other users to delete tasks', function (User $user) {
         ->delete(route('tasks.destroy', $task))
         ->assertForbidden();
 })->with([
-            fn() => User::factory()->create(['role_id' => Role::User->value]),
+            fn() => User::factory()->user()->create(),
             fn() => User::factory()->manager()->create(),
         ]);
