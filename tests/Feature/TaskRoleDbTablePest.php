@@ -8,10 +8,6 @@ use App\Models\Task;
 use Database\Factories\UserFactory;
 use Database\Seeders\RoleSeeder;
 
-beforeEach(function () {
-    $this->seed(RoleSeeder::class);
-});
-
 it('allows administrator to access create task page', function () {
     $user = User::factory()->administrator()->create();
 

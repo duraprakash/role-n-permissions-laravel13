@@ -47,21 +47,21 @@ class UserFactory extends Factory
     public function administrator(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->roles()->attach(Role::Administrator->value);
+            $user->assignRole(Role::Administrator);
         });
     }
 
     public function manager(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->roles()->attach(Role::Manager->value);
+            $user->assignRole(Role::Manager);
         });
     }
 
     public function user(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->roles()->attach(Role::User->value);
+            $user->assignRole(Role::User);
         });
     }
 }

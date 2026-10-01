@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $user->roles()->attach(Role::User->value);
+        $user->assignRole(Role::User);
         
         $administrator = User::create([
             'name' => 'Admin Test',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $administrator->roles()->attach(Role::Administrator->value);
+        $administrator->assignRole(Role::Administrator);
 
         $manager = User::create([
             'name' => 'Prakash Dura',
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $manager->roles()->attach(Role::Manager->value);
+        $manager->assignRole(Role::Manager);
 
     }
 }
