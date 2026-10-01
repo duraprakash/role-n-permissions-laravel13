@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->roles->contains(Role::Administrator->value);
+        return $user->hasRole(Role::Administrator);
     }
 
     /**
@@ -38,8 +38,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->roles->contains(Role::Administrator->value)
-            || $user->roles->contains(Role::Manager->value)
+        return $user->hasAnyRole([Role::Administrator, Role::Manager])
             || $task->user_id === $user->id;
     }
 
@@ -48,7 +47,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->roles->contains(Role::Administrator->value);
+        return $user->hasRole(Role::Administrator);
     }
 
     /**
