@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Enums\Role;
 use App\Models\Task;
 use App\Models\User;
@@ -30,7 +31,8 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(Role::Administrator);
+        // return $user->hasRole(Role::Administrator);
+        return $user->hasPermissionTo(Permission::CREATE_TASK->value);
     }
 
     /**
@@ -38,7 +40,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->hasAnyRole([Role::Administrator, Role::Manager])
+        return $user->hasPermissionTo(Permission::EDIT_TASK)
             || $task->user_id === $user->id;
     }
 
@@ -47,7 +49,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->hasRole(Role::Administrator);
+        return $user->hasPermissionTo(Permission::DELETE_TASK);
     }
 
     /**
